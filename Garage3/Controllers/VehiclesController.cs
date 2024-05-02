@@ -194,6 +194,12 @@ namespace Garage3.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        
+        // GET: Vehicles/ShowReceipts/5
+        public async Task<IActionResult> ShowReceipts(string id)
+        {
+            return RedirectToAction("Index", "Receipts", id);
+        }
         private bool VehicleExists(string id)
         {
             return _context.Vehicles.Any(e => e.RegistrationNumber == id);

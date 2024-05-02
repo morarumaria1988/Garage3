@@ -8,7 +8,7 @@
         public string Make {  get; set; }
         public int NumberOfWheels { get; set; }
         public Customer Member { get; set; }
-        public ICollection<Receipt> Receipts { get; set; }
+        public ICollection<Receipt> Receipts { get; set; } = new List<Receipt>();
         public DateTime? ArrivalTime { get; set; } 
     }
     public class VehicleType

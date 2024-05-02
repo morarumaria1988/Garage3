@@ -8,7 +8,7 @@ namespace Garage3.Models.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => FirstName + " " + LastName;
-        public ICollection<Vehicle> Vehicles { get; set; }
+        public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }
 
 }

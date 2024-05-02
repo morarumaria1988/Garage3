@@ -3,6 +3,7 @@
     public class Vehicle
     {
         public string RegistrationNumber { get; set; }
+        public string PersonalNumber { get; set; }
         VehicleType Vehicle_type { get; set; }
         public string Color { get; set; }
         public string Make {  get; set; }

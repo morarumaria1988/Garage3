@@ -1,6 +1,7 @@
 ﻿using Garage3.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection.Emit;
 
 namespace Garage3.Models.Persistence
 {
@@ -21,7 +22,7 @@ namespace Garage3.Models.Persistence
 
             modelBuilder.ApplyConfiguration(new CustomerConfigurations());
             modelBuilder.ApplyConfiguration(new VehicleConfigurations());
-        }
+           
     }
-
+    }
 }

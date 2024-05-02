@@ -4,6 +4,7 @@ using Garage3.Models.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage3.Migrations
 {
     [DbContext(typeof(GarageMVCContext))]
-    partial class GarageMVCContextModelSnapshot : ModelSnapshot
+    [Migration("20240502094458_Init3")]
+    partial class Init3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,16 +91,16 @@ namespace Garage3.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfWheels")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PersonalNumber")
+                    b.Property<string>("MemberPersonalNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("NumberOfWheels")
+                        .HasColumnType("int");
+
                     b.HasKey("RegistrationNumber");
 
-                    b.HasIndex("PersonalNumber");
+                    b.HasIndex("MemberPersonalNumber");
 
                     b.ToTable("Vehicles");
                 });
@@ -117,7 +120,7 @@ namespace Garage3.Migrations
                 {
                     b.HasOne("Garage3.Models.Entities.Customer", "Member")
                         .WithMany("Vehicles")
-                        .HasForeignKey("PersonalNumber")
+                        .HasForeignKey("MemberPersonalNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -13,6 +13,9 @@ namespace Garage3.Models.Persistence
             builder.HasOne(v => v.Member)
            .WithMany(c => c.Vehicles)
            .HasForeignKey(v => v.PersonalNumber);
+            builder.HasMany(v => v.Receipts)
+                .WithOne(r => r.Fordon)
+                .HasForeignKey(r => r.RegistrationNumber);
         }
     }
 }

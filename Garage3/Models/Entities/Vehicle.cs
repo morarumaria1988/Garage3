@@ -4,7 +4,7 @@
     {
         public string RegistrationNumber { get; set; }
         public string PersonalNumber { get; set; }
-        VehicleType? Vehicle_type { get; set; }
+       // TODO make it a table VehicleType? Vehicle_type { get; set; }
         public string Color { get; set; }
         public string Make {  get; set; }
         public int NumberOfWheels { get; set; }

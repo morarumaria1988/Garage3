@@ -150,6 +150,50 @@ namespace Garage3.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Vehicles/Park/5
+        public async Task<IActionResult> Park(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            vehicle.ArrivalTime = DateTime.Now;
+            return RedirectToAction(nameof(Index));
+            // return View(vehicle);
+        }
+
+        // GET: Vehicles/CheckOut/5
+        public async Task<IActionResult> CheckOut(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            Receipt receipt = new Receipt();
+            receipt.ArrivalTime = vehicle.ArrivalTime ?? DateTime.Now;
+            receipt.DepartureTime = DateTime.Now;
+            receipt.RegistrationNumber = vehicle.RegistrationNumber;
+            receipt.Price = 10.00; //TODO
+            _context.Add(receipt);
+            vehicle.ArrivalTime = null;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         private bool VehicleExists(string id)
         {
             return _context.Vehicles.Any(e => e.RegistrationNumber == id);

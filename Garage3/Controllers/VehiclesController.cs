@@ -55,6 +55,7 @@ namespace Garage3.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RegistrationNumber,PersonalNumber,Color,Make,NumberOfWheels,ArrivalTime")] Vehicle vehicle)
+
         {
             if (ModelState.IsValid)
             {

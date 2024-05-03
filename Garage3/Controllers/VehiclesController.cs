@@ -23,7 +23,7 @@ namespace Garage3.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-         
+
             return View(await _context.Vehicles.ToListAsync());
         }
 
@@ -64,7 +64,7 @@ namespace Garage3.Controllers
 
             var vtyp = new VehicleType();
             vtyp.Name = (vehicleViewModel.VType == "Other") ? vehicleViewModel.VTypeCustom : vehicleViewModel.VType;
-            
+
             Vehicle v = new Vehicle();
             v.ArrivalTime = vehicleViewModel.ArrivalTime;
             v.RegistrationNumber = vehicleViewModel.RegistrationNumber;
@@ -74,19 +74,30 @@ namespace Garage3.Controllers
             v.Make = vehicleViewModel.Make;
             v.TypeName = vtyp.Name;
 
-           
+
             if (ModelState.IsValid)
             {
                 if (!_context.VTypes.Contains(vtyp))
                 {
                     _context.Add(vtyp);
                 }
-                _context.Add(v);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                var stored = _context.Vehicles.FirstOrDefault(sv => sv.RegistrationNumber == v.RegistrationNumber);
+                if (stored == null) {
+                    _context.Add(v);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else {
+
+                    ModelState.AddModelError(string.Empty, "This vehcile registration number already exists");
+                }
+    
             }
-                      
-            return View(v);
+
+            string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();
+            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
+            return View();
         }
 
         // GET: Vehicles/Edit/5
@@ -217,7 +228,7 @@ namespace Garage3.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        
+
         // GET: Vehicles/ShowReceipts/5
         public async Task<IActionResult> ShowReceipts(string id)
         {

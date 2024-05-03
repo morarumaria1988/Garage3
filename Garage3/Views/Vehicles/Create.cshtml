@@ -5,6 +5,18 @@
 
 }
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            @error.ErrorMessage
+
+            <br />
+        }
+    </div>
+}
+
 
 <h1>Create</h1>
 

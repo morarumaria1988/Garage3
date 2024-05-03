@@ -81,9 +81,18 @@ namespace Garage3.Controllers
                 {
                     _context.Add(vtyp);
                 }
-                _context.Add(v);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                var stored = _context.Vehicles.FirstOrDefault(sv => sv.RegistrationNumber == v.RegistrationNumber);
+                if (stored == null) {
+                    _context.Add(v);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else {
+
+                    ModelState.AddModelError(string.Empty, "This vehcile registration number already exists");
+                }
+    
             }
 
             string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();

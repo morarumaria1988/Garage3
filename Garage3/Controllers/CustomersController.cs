@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
+using Garage3.Models;
 
 namespace Garage3.Controllers
 {
@@ -22,7 +23,19 @@ namespace Garage3.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            var customers = await _context.Customers.Include(c => c.Vehicles)
+                .OrderBy(c => c.FirstName)
+                .ToListAsync();
+
+            var models = customers.Select(c => new CustomerIndexViewModel
+            {
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                PersonalNumber = c.PersonalNumber,
+                VehicleCount = c.Vehicles.Count()
+            });
+
+            return View(models);
         }
 
         // GET: Customers/Details/5

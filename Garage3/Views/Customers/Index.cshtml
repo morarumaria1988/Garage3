@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Garage3.Models.Entities.Customer>
+﻿@model IEnumerable<CustomerIndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.LastName)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleCount)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -36,6 +39,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleCount)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PersonalNumber">Edit</a> |

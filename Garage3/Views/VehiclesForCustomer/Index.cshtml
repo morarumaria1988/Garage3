@@ -1,0 +1,53 @@
+﻿@model Garage3.Models.ViewModels.VehiclesForCustomerViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+  @Model.customer.FullName 
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                VType
+            </th>
+            <th>
+                Color
+            </th>
+            <th>
+                Make
+            </th>
+            <th>
+                NumberOfWheels
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.vehicleViewModels) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Make)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfWheels)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RegistrationNumber">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RegistrationNumber">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RegistrationNumber">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

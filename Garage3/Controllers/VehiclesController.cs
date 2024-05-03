@@ -23,6 +23,7 @@ namespace Garage3.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
+         
             return View(await _context.Vehicles.ToListAsync());
         }
 
@@ -45,8 +46,10 @@ namespace Garage3.Controllers
         }
 
         // GET: Vehicles/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();
+            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
             return View();
         }
 
@@ -71,22 +74,19 @@ namespace Garage3.Controllers
             v.Make = vehicleViewModel.Make;
             v.TypeName = vtyp.Name;
 
-            /*
+           
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
+                if (!_context.VTypes.Contains(vtyp))
+                {
+                    _context.Add(vtyp);
+                }
+                _context.Add(v);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            */
-            if (!_context.VTypes.Contains(vtyp))
-            {
-                _context.Add(vtyp);
-            }
-            _context.Add(v);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-           // return View(v);
+                      
+            return View(v);
         }
 
         // GET: Vehicles/Edit/5

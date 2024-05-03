@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+
 }
 
 
@@ -26,9 +27,14 @@
             <div class="form-group">
                 <label asp-for="VType" class="control-label"></label>
                 <select asp-for="VType" class="form-control" id="VTypeInput" onchange="vtypeChanged()">
-                    <option value="Car">Car</option>
-                    <option value="Motorcycle">Motorcycle</option>
-                    <option value="Other">Other</option>
+                    @{
+
+                    var options = (IEnumerable<String>)ViewData["VTypeOptions"];
+                    foreach (string option in options)
+                    {
+                        <option value=@option>@option</option>
+                    }
+                    }
                 </select>
                 <span asp-validation-for="VType" class="text-danger"></span>
             </div>

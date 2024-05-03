@@ -1,8 +1,9 @@
-﻿@model Garage3.Models.Entities.Vehicle
+﻿@model Garage3.Models.ViewModels.CreateVehicleViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
+
 
 <h1>Create</h1>
 
@@ -21,6 +22,17 @@
                 <label asp-for="PersonalNumber" class="control-label"></label>
                 <input asp-for="PersonalNumber" class="form-control" />
                 <span asp-validation-for="PersonalNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VType" class="control-label"></label>
+                <select asp-for="VType" class="form-control" id="VTypeInput" onchange="vtypeChanged()">
+                    <option value="Car">Car</option>
+                    <option value="Motorcycle">Motorcycle</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="VType" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="CustomVTypeDiv">  
             </div>
             <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
@@ -49,6 +61,26 @@
     </div>
 </div>
 
+<script type="text/javascript">
+
+    function vtypeChanged() {
+        var value = document.getElementById("VTypeInput").value;
+
+        if (value == "Other") {
+
+            let html =
+                '<label class="control-label" for= "VTypeCustom" > VTypeCustom </label>\
+             <input class= "form-control" type = "text" data - val="true" data - val - required="The field is required." id = "VTypeCustom" name = "VTypeCustom" value = "" >\
+             <span class= "text-danger field-validation-valid" data - valmsg -for= "VTypeCustom" data - valmsg - replace= "true" > </span>'
+
+            document.getElementById("CustomVTypeDiv").innerHTML = html
+        }
+        else {
+            document.getElementById("CustomVTypeDiv").innerHTML = "";
+        }
+    }
+
+</script>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

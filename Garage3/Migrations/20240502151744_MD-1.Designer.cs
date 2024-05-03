@@ -4,6 +4,7 @@ using Garage3.Models.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage3.Migrations
 {
     [DbContext(typeof(GarageMVCContext))]
-    partial class GarageMVCContextModelSnapshot : ModelSnapshot
+    [Migration("20240502151744_MD-1")]
+    partial class MD1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace Garage3.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TypeName")
+                    b.Property<string>("VTypeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -99,7 +102,7 @@ namespace Garage3.Migrations
 
                     b.HasIndex("PersonalNumber");
 
-                    b.HasIndex("TypeName");
+                    b.HasIndex("VTypeName");
 
                     b.ToTable("Vehicles");
                 });
@@ -111,7 +114,7 @@ namespace Garage3.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("VTypes");
+                    b.ToTable("VehicleType");
                 });
 
             modelBuilder.Entity("Garage3.Models.Entities.Receipt", b =>
@@ -135,7 +138,7 @@ namespace Garage3.Migrations
 
                     b.HasOne("Garage3.Models.Entities.VehicleType", "VType")
                         .WithMany("Vehicles")
-                        .HasForeignKey("TypeName")
+                        .HasForeignKey("VTypeName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

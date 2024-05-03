@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
+using Garage3.Models.ViewModels;
 
 namespace Garage3.Controllers
 {
@@ -22,6 +23,7 @@ namespace Garage3.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
+         
             return View(await _context.Vehicles.ToListAsync());
         }
 
@@ -44,8 +46,10 @@ namespace Garage3.Controllers
         }
 
         // GET: Vehicles/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();
+            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
             return View();
         }
 
@@ -54,16 +58,35 @@ namespace Garage3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegistrationNumber,PersonalNumber,Color,Make,NumberOfWheels,ArrivalTime")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("RegistrationNumber,PersonalNumber,VType,VTypeCustom, Color,Make,NumberOfWheels,ArrivalTime")] CreateVehicleViewModel vehicleViewModel)
 
         {
+
+            var vtyp = new VehicleType();
+            vtyp.Name = (vehicleViewModel.VType == "Other") ? vehicleViewModel.VTypeCustom : vehicleViewModel.VType;
+            
+            Vehicle v = new Vehicle();
+            v.ArrivalTime = vehicleViewModel.ArrivalTime;
+            v.RegistrationNumber = vehicleViewModel.RegistrationNumber;
+            v.PersonalNumber = vehicleViewModel.PersonalNumber;
+            v.NumberOfWheels = vehicleViewModel.NumberOfWheels;
+            v.Color = vehicleViewModel.Color;
+            v.Make = vehicleViewModel.Make;
+            v.TypeName = vtyp.Name;
+
+           
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
+                if (!_context.VTypes.Contains(vtyp))
+                {
+                    _context.Add(vtyp);
+                }
+                _context.Add(v);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+                      
+            return View(v);
         }
 
         // GET: Vehicles/Edit/5

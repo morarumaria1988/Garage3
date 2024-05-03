@@ -4,6 +4,7 @@ using Garage3.Models.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage3.Migrations
 {
     [DbContext(typeof(GarageMVCContext))]
-    partial class GarageMVCContextModelSnapshot : ModelSnapshot
+    [Migration("20240502174900_MD-2")]
+    partial class MD2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace Garage3.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TypeName")
+                    b.Property<string>("VTypeId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -99,19 +102,23 @@ namespace Garage3.Migrations
 
                     b.HasIndex("PersonalNumber");
 
-                    b.HasIndex("TypeName");
+                    b.HasIndex("VTypeId");
 
                     b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("Garage3.Models.Entities.VehicleType", b =>
                 {
-                    b.Property<string>("Name")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("VTypes");
+                    b.HasKey("Id");
+
+                    b.ToTable("VehicleType");
                 });
 
             modelBuilder.Entity("Garage3.Models.Entities.Receipt", b =>
@@ -135,7 +142,7 @@ namespace Garage3.Migrations
 
                     b.HasOne("Garage3.Models.Entities.VehicleType", "VType")
                         .WithMany("Vehicles")
-                        .HasForeignKey("TypeName")
+                        .HasForeignKey("VTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -4,6 +4,7 @@ using Garage3.Models.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage3.Migrations
 {
     [DbContext(typeof(GarageMVCContext))]
-    partial class GarageMVCContextModelSnapshot : ModelSnapshot
+    [Migration("20240503105642_MD-4")]
+    partial class MD4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +114,7 @@ namespace Garage3.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("VTypes");
+                    b.ToTable("VehicleType");
                 });
 
             modelBuilder.Entity("Garage3.Models.Entities.Receipt", b =>

@@ -2,13 +2,14 @@
 
 @{
     ViewData["Title"] = "Index";
+    var parkedCount = ViewData["ParkedCount"];
 }
 
-<h1>Index</h1>
-
+<h3>Number of Parked Vehicles: @parkedCount</h3>
 <p>
     <a asp-action="Create">Register New Vehicle</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>

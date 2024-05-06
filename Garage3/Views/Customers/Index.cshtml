@@ -31,9 +31,11 @@
                 @Html.DisplayNameFor(model => model.FullName)
             </th>
             <th>
-               Number of Owned Vehicles
+                @Html.DisplayNameFor(model => model.Vcount)
             </th>
-            <th></th>
+            <th>
+          
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -50,7 +52,7 @@
                     @item.Vcount
                 </td>
                 <td>
-                    <a asp-action="Index" asp-controller="VehiclesForCustomer" asp-route-id=@item.PersonalNumber>List Vehicle</a>
+                    <a asp-action="Index" asp-controller="VehiclesForCustomer" asp-route-id=@item.PersonalNumber>List Vehicle</a> |
                     <a asp-action="Edit" asp-route-id="@item.PersonalNumber">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.PersonalNumber">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.PersonalNumber">Delete</a>

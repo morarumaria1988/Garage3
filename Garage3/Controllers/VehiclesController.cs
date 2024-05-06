@@ -45,6 +45,9 @@ namespace Garage3.Controllers
 
             }).ToListAsync();
 
+           var parkedCount = await _context.Vehicles.Where(v => v.ArrivalTime != null).CountAsync();
+            ViewData["ParkedCount"] = parkedCount;
+
             return View(list);
         }
 

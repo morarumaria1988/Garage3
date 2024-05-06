@@ -211,8 +211,8 @@ namespace Garage3.Controllers
             }
 
             vehicle.ArrivalTime = DateTime.Now;
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            // return View(vehicle);
         }
 
         // GET: Vehicles/CheckOut/5

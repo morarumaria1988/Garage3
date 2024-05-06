@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
+using Garage3.Models.ViewModels;
 
 namespace Garage3.Controllers
 {
@@ -22,7 +23,13 @@ namespace Garage3.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            var cs = await _context.Customers.Select( c => new ShowCustomerViewModel { 
+                PersonalNumber = c.PersonalNumber,
+                FullName = c.FullName,
+                Vcount = c.Vehicles.Count
+            }).ToListAsync();
+
+            return View(cs);
         }
 
         // GET: Customers/Details/5

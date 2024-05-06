@@ -22,8 +22,13 @@ namespace Garage3.Controllers
         // GET: Receipts
         public async Task<IActionResult> Index()
         {
-            var garageMVCContext = _context.Receipts.Include(r => r.Fordon);
-            return View(await garageMVCContext.ToListAsync());
+
+           var id = this.RouteData.Values["id"];
+            var receptis = await _context.Receipts.Where( r => r.RegistrationNumber == id).ToListAsync();
+
+            ViewData["RegistrationNumber"] = id;
+
+            return View(receptis);
         }
 
         // GET: Receipts/Details/5

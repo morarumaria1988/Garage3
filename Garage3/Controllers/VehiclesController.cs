@@ -265,7 +265,7 @@ namespace Garage3.Controllers
         // GET: Vehicles/ShowReceipts/5
         public async Task<IActionResult> ShowReceipts(string id)
         {
-            return RedirectToAction("Index", "Receipts", id);
+            return RedirectToAction("Index", "Receipts", new {id = id});
         }
         private bool VehicleExists(string id)
         {

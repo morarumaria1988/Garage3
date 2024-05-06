@@ -23,8 +23,9 @@ namespace Garage3.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            var customers = await _context.Customers.Include(c => c.Vehicles)
-                .OrderBy(c => c.FirstName)
+            var customers = await _context.Customers
+                .Include(c => c.Vehicles)
+                .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
                 .ToListAsync();
 
             var models = customers.Select(c => new CustomerIndexViewModel
@@ -36,6 +37,31 @@ namespace Garage3.Controllers
             });
 
             return View(models);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(string? firstName)
+        {
+            var customers = firstName is not null ?
+                await _context.Customers
+                    .Where(c => c.FirstName.Contains(firstName))
+                    .Include(c => c.Vehicles)
+                    .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
+                    .ToListAsync() :
+                await _context.Customers
+                    .Include(c => c.Vehicles)
+                    .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
+                    .ToListAsync();
+
+            var models = customers.Select(c => new CustomerIndexViewModel
+            {
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                PersonalNumber = c.PersonalNumber,
+                VehicleCount = c.Vehicles.Count()
+            });
+
+            return View(nameof(Index), models);
         }
 
         // GET: Customers/Details/5

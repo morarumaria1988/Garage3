@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
-using Garage3.Models;
+using Garage3.Models.ViewModels;
 
 namespace Garage3.Controllers
 {
@@ -23,45 +23,13 @@ namespace Garage3.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            var customers = await _context.Customers
-                .Include(c => c.Vehicles)
-                .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
-                .ToListAsync();
-
-            var models = customers.Select(c => new CustomerIndexViewModel
-            {
-                FirstName = c.FirstName,
-                LastName = c.LastName,
+            var cs = await _context.Customers.Select( c => new ShowCustomerViewModel { 
                 PersonalNumber = c.PersonalNumber,
-                VehicleCount = c.Vehicles.Count()
-            });
+                FullName = c.FullName,
+                Vcount = c.Vehicles.Count
+            }).ToListAsync();
 
-            return View(models);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Filter(string? firstName)
-        {
-            var customers = firstName is not null ?
-                await _context.Customers
-                    .Where(c => c.FirstName.Contains(firstName))
-                    .Include(c => c.Vehicles)
-                    .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
-                    .ToListAsync() :
-                await _context.Customers
-                    .Include(c => c.Vehicles)
-                    .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
-                    .ToListAsync();
-
-            var models = customers.Select(c => new CustomerIndexViewModel
-            {
-                FirstName = c.FirstName,
-                LastName = c.LastName,
-                PersonalNumber = c.PersonalNumber,
-                VehicleCount = c.Vehicles.Count()
-            });
-
-            return View(nameof(Index), models);
+            return View(cs);
         }
 
         // GET: Customers/Details/5

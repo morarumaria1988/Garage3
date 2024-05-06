@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
+using Garage3.Models.ViewModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Drawing;
 
 namespace Garage3.Controllers
 {
@@ -17,16 +20,39 @@ namespace Garage3.Controllers
         public VehiclesController(GarageMVCContext context)
         {
             _context = context;
+      
+        }
+
+        // Helper 
+        private async Task LoadViewData() {
+
+            string[] vTypeOptions = await _context.VTypes.Select(v => v.Name).ToArrayAsync();
+            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
         }
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicles.ToListAsync());
+
+           var list = await _context.Vehicles.Select( v => new ShowVehicleViewModel { 
+                RegistrationNumber = v.RegistrationNumber,
+                OwnerFullName = v.Member.FullName,
+                Color = v.Color,
+                Make = v.Make,
+                TypeName = v.TypeName,
+                NumberOfWheels = v.NumberOfWheels,
+                IsParked = (v.ArrivalTime != null)
+
+            }).ToListAsync();
+
+           var parkedCount = await _context.Vehicles.Where(v => v.ArrivalTime != null).CountAsync();
+            ViewData["ParkedCount"] = parkedCount;
+
+            return View(list);
         }
 
-        // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(string id)
+    // GET: Vehicles/Details/5
+    public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -44,8 +70,9 @@ namespace Garage3.Controllers
         }
 
         // GET: Vehicles/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await LoadViewData();
             return View();
         }
 
@@ -54,16 +81,55 @@ namespace Garage3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegistrationNumber,PersonalNumber,Color,Make,NumberOfWheels,ArrivalTime")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("RegistrationNumber,PersonalNumber,VType,VTypeCustom, Color,Make,NumberOfWheels,ArrivalTime")] CreateVehicleViewModel vehicleViewModel)
 
         {
+
+            var vtyp = new VehicleType();
+            vtyp.Name = (vehicleViewModel.VType == "Other") ? vehicleViewModel.VTypeCustom : vehicleViewModel.VType;
+
+            Vehicle v = new Vehicle();
+            v.ArrivalTime = vehicleViewModel.ArrivalTime;
+            v.RegistrationNumber = vehicleViewModel.RegistrationNumber;
+            v.PersonalNumber = vehicleViewModel.PersonalNumber;
+            v.NumberOfWheels = vehicleViewModel.NumberOfWheels;
+            v.Color = vehicleViewModel.Color;
+            v.Make = vehicleViewModel.Make;
+            v.TypeName = vtyp.Name;
+
+
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (_context.Customers.FirstOrDefault(c => c.PersonalNumber == vehicleViewModel.PersonalNumber) == null)
+                {
+
+                    ModelState.AddModelError(string.Empty, "This user personal number dont exist in our database");
+
+                }
+
+                else
+                {
+                    if (!_context.VTypes.Contains(vtyp))
+                    {
+                        _context.Add(vtyp);
+                    }
+
+                    var stored = _context.Vehicles.FirstOrDefault(sv => sv.RegistrationNumber == v.RegistrationNumber);
+                    if (stored == null)
+                    {
+                        _context.Add(v);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+
+                        ModelState.AddModelError(string.Empty, "This vehcile registration number already exists");
+                    }
+                }
             }
-            return View(vehicle);
+           await LoadViewData();
+            return View();
         }
 
         // GET: Vehicles/Edit/5
@@ -166,8 +232,8 @@ namespace Garage3.Controllers
             }
 
             vehicle.ArrivalTime = DateTime.Now;
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            // return View(vehicle);
         }
 
         // GET: Vehicles/CheckOut/5
@@ -194,11 +260,11 @@ namespace Garage3.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        
+
         // GET: Vehicles/ShowReceipts/5
         public async Task<IActionResult> ShowReceipts(string id)
         {
-            return RedirectToAction("Index", "Receipts", id);
+            return RedirectToAction("Index", "Receipts", new {id = id});
         }
         private bool VehicleExists(string id)
         {

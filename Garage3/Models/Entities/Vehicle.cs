@@ -1,10 +1,14 @@
-﻿namespace Garage3.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Garage3.Models.Entities
 {
     public class Vehicle
     {
         public string RegistrationNumber { get; set; }
         public string PersonalNumber { get; set; }
-       // TODO make it a table VehicleType? Vehicle_type { get; set; }
+        public string TypeName { get; set; }
+        public VehicleType? VType { get; set; } 
         public string Color { get; set; }
         public string Make {  get; set; }
         public int NumberOfWheels { get; set; }
@@ -14,7 +18,9 @@
     }
     public class VehicleType
     {
-        public int Id { get; set; }
+        [Key]
         public string Name { get; set; }
+
+        public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }
 }

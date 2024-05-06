@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-
+    var options = (IEnumerable<String>)ViewData["VTypeOptions"] ?? [];
 }
 
 @if (!ViewData.ModelState.IsValid)
@@ -19,7 +19,7 @@
 
 
 <h1>Create</h1>
-
+<img src onerror="vtypeChanged()">
 <h4>Vehicle</h4>
 <hr />
 <div class="row">
@@ -37,11 +37,11 @@
                 <span asp-validation-for="PersonalNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VType" class="control-label"></label>
+                <label asp-for="VType" class="control-label">Existing types</label>
                 <select asp-for="VType" class="form-control" id="VTypeInput" onclick="vtypeChanged()">
                     @{
 
-                    var options = (IEnumerable<String>)ViewData["VTypeOptions"] ?? [];
+                  
                     foreach (string option in options)
                     {
                         <option value=@option>@option</option>
@@ -51,15 +51,6 @@
                 <span asp-validation-for="VType" class="text-danger"></span>
             </div>
             <div class="form-group" id="CustomVTypeDiv">  
-                @{
-                    var options = (IEnumerable<String>)ViewData["VTypeOptions"] ?? [];
-                    if(options.Count() <= 1)
-                    {
-                        <label asp-for="VTypeCustom" class="control-label">New vehicle type</label>
-                        <input asp-for="VTypeCustom" class="form-control" />
-                        <span asp-validation-for="VTypeCustom" class="text-danger"></span>
-                    }
-                }
             </div>
             <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
@@ -77,7 +68,7 @@
                 <span asp-validation-for="NumberOfWheels" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArrivalTime" class="control-label"></label>
+                <label asp-for="ArrivalTime" class="control-label">Arrival Time(optional)</label>
                 <input asp-for="ArrivalTime" class="form-control" />
                 <span asp-validation-for="ArrivalTime" class="text-danger"></span>
             </div>

@@ -23,13 +23,37 @@ namespace Garage3.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            var cs = await _context.Customers.Select( c => new ShowCustomerViewModel { 
+            var cs = await _context.Customers
+                .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
+                .Select( c => new ShowCustomerViewModel { 
                 PersonalNumber = c.PersonalNumber,
                 FullName = c.FullName,
                 Vcount = c.Vehicles.Count
             }).ToListAsync();
 
             return View(cs);
+        }
+
+        public async Task<IActionResult> Filter(string? firstName)
+        {
+            var customers = firstName is not null ?
+                await _context.Customers
+                    .Where(c => c.FirstName.Contains(firstName))
+                    .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
+                    .Include(c => c.Vehicles)
+                    .ToListAsync() :
+                await _context.Customers
+                    .Include(c => c.Vehicles)
+                    .OrderBy(c => c.FirstName.Length >= 2 ? c.FirstName.Substring(2) : c.FirstName)
+                    .ToListAsync();
+
+            var models = customers.Select(c => new ShowCustomerViewModel {
+                PersonalNumber = c.PersonalNumber,
+                FullName = c.FullName,
+                Vcount = c.Vehicles.Count
+            }).ToList();
+
+            return View(nameof(Index), models);
         }
 
         // GET: Customers/Details/5

@@ -77,22 +77,33 @@ namespace Garage3.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!_context.VTypes.Contains(vtyp))
+                if (_context.Customers.FirstOrDefault(c => c.PersonalNumber == vehicleViewModel.PersonalNumber) == null)
                 {
-                    _context.Add(vtyp);
+
+                    ModelState.AddModelError(string.Empty, "This user personal number dont exist in our database");
+
                 }
 
-                var stored = _context.Vehicles.FirstOrDefault(sv => sv.RegistrationNumber == v.RegistrationNumber);
-                if (stored == null) {
-                    _context.Add(v);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                else {
+                else
+                {
+                    if (!_context.VTypes.Contains(vtyp))
+                    {
+                        _context.Add(vtyp);
+                    }
 
-                    ModelState.AddModelError(string.Empty, "This vehcile registration number already exists");
+                    var stored = _context.Vehicles.FirstOrDefault(sv => sv.RegistrationNumber == v.RegistrationNumber);
+                    if (stored == null)
+                    {
+                        _context.Add(v);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+
+                        ModelState.AddModelError(string.Empty, "This vehcile registration number already exists");
+                    }
                 }
-    
             }
 
             string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();

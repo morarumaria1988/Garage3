@@ -3,10 +3,13 @@
 @{
     ViewData["Title"] = "Index";
     var registrationNumber = ViewData["RegistrationNumber"];
+
+    var personalNumber = ViewData["PersonalNumber"];
+    var fullName = ViewData["FullName"];
 }
 
-<h3>Recepts for Vehicle @registrationNumber</h3>
-
+<h3>Receipts for Vehicle <strong>@registrationNumber</strong></h3>
+<h5>Customer <strong>@fullName</strong> with personal number <strong>@personalNumber</strong></h5>
 <table class="table">
     <thead>
         <tr>

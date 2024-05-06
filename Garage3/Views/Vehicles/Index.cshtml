@@ -1,19 +1,25 @@
-﻿@model IEnumerable<Garage3.Models.Entities.Vehicle>
+﻿@model IEnumerable<Garage3.Models.ViewModels.ShowVehicleViewModel>
 
 @{
     ViewData["Title"] = "Index";
+    var parkedCount = ViewData["ParkedCount"];
 }
 
-<h1>Index</h1>
-
+<h3>Number of Parked Vehicles: @parkedCount</h3>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">
+        <button type="button" class="btn btn-primary">Register New Vehicle</button>
+    </a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.RegistrationNumber)
+            </th>
+            <th>
+                Owner  
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Color)
@@ -25,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.NumberOfWheels)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
+                @Html.DisplayNameFor(model => model.IsParked)
             </th>
             <th></th>
         </tr>
@@ -37,6 +43,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.RegistrationNumber)
                 </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.OwnerFullName)
+                </th>
                 <td>
                     @Html.DisplayFor(modelItem => item.Color)
                 </td>
@@ -47,14 +56,24 @@
                     @Html.DisplayFor(modelItem => item.NumberOfWheels)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ArrivalTime)
+                    @if (item.IsParked)
+                    {
+                        <p>Parked</p>
+                    }
+
                 </td>
                 <td>
+                    @if (item.IsParked)
+                    {
+                        <a asp-action="CheckOut" asp-route-id="@item.RegistrationNumber">CheckOut</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Park" asp-route-id="@item.RegistrationNumber">Park</a>
+                    } |
                     <a asp-action="Edit" asp-route-id="@item.RegistrationNumber">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.RegistrationNumber">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.RegistrationNumber">Delete</a>
-                    <a asp-action="Park" asp-route-id="@item.RegistrationNumber">Park</a>
-                    <a asp-action="CheckOut" asp-route-id="@item.RegistrationNumber">CheckOut</a>
+                    <a asp-action="Delete" asp-route-id="@item.RegistrationNumber">Delete</a> |
                     <a asp-action="ShowReceipts" asp-route-id="@item.RegistrationNumber">ShowReceipts</a>
                 </td>
             </tr>

@@ -2,13 +2,14 @@
 
 @{
     ViewData["Title"] = "Index";
+    var registrationNumber = ViewData["RegistrationNumber"];
+
+    var personalNumber = ViewData["PersonalNumber"];
+    var fullName = ViewData["FullName"];
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h3>Receipts for Vehicle <strong>@registrationNumber</strong></h3>
+<h5>Customer <strong>@fullName</strong> with personal number <strong>@personalNumber</strong></h5>
 <table class="table">
     <thead>
         <tr>
@@ -17,9 +18,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DepartureTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fordon)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
@@ -35,9 +33,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DepartureTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fordon.RegistrationNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)

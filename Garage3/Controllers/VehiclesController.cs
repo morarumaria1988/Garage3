@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
 using Garage3.Models.ViewModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Drawing;
 
 namespace Garage3.Controllers
 {
@@ -18,17 +20,39 @@ namespace Garage3.Controllers
         public VehiclesController(GarageMVCContext context)
         {
             _context = context;
+      
+        }
+
+        // Helper 
+        private async Task LoadViewData() {
+
+            string[] vTypeOptions = await _context.VTypes.Select(v => v.Name).ToArrayAsync();
+            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
         }
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
 
-            return View(await _context.Vehicles.ToListAsync());
+           var list = await _context.Vehicles.Select( v => new ShowVehicleViewModel { 
+                RegistrationNumber = v.RegistrationNumber,
+                OwnerFullName = v.Member.FullName,
+                Color = v.Color,
+                Make = v.Make,
+                TypeName = v.TypeName,
+                NumberOfWheels = v.NumberOfWheels,
+                IsParked = (v.ArrivalTime != null)
+
+            }).ToListAsync();
+
+           var parkedCount = await _context.Vehicles.Where(v => v.ArrivalTime != null).CountAsync();
+            ViewData["ParkedCount"] = parkedCount;
+
+            return View(list);
         }
 
-        // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(string id)
+    // GET: Vehicles/Details/5
+    public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -48,8 +72,7 @@ namespace Garage3.Controllers
         // GET: Vehicles/Create
         public async Task<IActionResult> Create()
         {
-            string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();
-            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
+            await LoadViewData();
             return View();
         }
 
@@ -105,9 +128,7 @@ namespace Garage3.Controllers
                     }
                 }
             }
-
-            string[] vTypeOptions = await this._context.VTypes.Select(v => v.Name).ToArrayAsync();
-            ViewData["VTypeOptions"] = vTypeOptions.Append("Other");
+           await LoadViewData();
             return View();
         }
 
@@ -243,7 +264,7 @@ namespace Garage3.Controllers
         // GET: Vehicles/ShowReceipts/5
         public async Task<IActionResult> ShowReceipts(string id)
         {
-            return RedirectToAction("Index", "Receipts", id);
+            return RedirectToAction("Index", "Receipts", new {id = id});
         }
         private bool VehicleExists(string id)
         {

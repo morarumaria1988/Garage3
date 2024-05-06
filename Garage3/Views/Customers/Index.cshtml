@@ -1,13 +1,13 @@
-﻿@model IEnumerable<Garage3.Models.Entities.Customer>
+﻿@model IEnumerable<Garage3.Models.ViewModels.ShowCustomerViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Customers</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Register New Customer</a>
 </p>
 <table class="table">
     <thead>
@@ -16,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.PersonalNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.FullName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+               Number of Owned Vehicles
             </th>
             <th></th>
         </tr>
@@ -32,15 +32,15 @@
                     @Html.DisplayFor(modelItem => item.PersonalNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    @item.Vcount
                 </td>
                 <td>
                     <a class="nav-link text-dark" asp-area=""  asp-action="Privacy">Privacy</a>
 
-                    <a asp-action="Index" asp-controller="VehiclesForCustomer" asp-route-id=@item.PersonalNumber>List Vehicle</a>
+                    <a asp-action="Index" asp-controller="VehiclesForCustomer" asp-route-id=@item.PersonalNumber>List Vehicle</a> |
                     <a asp-action="Edit" asp-route-id="@item.PersonalNumber">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.PersonalNumber">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.PersonalNumber">Delete</a>

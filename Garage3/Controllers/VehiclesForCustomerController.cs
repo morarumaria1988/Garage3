@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
 using Garage3.Models.ViewModels;
+using Bogus.DataSets;
 
 namespace Garage3.Controllers
 {
@@ -27,7 +28,7 @@ namespace Garage3.Controllers
             var vehicles = await garageMVCContext.ToListAsync();
 
             List<VehiclesForCustomerViewModel.VehicleViewModel> result = new List<VehiclesForCustomerViewModel.VehicleViewModel>();
-            foreach (Vehicle v in vehicles) {
+            foreach (Models.Entities.Vehicle v in vehicles) {
 
                var vVM = new VehiclesForCustomerViewModel.VehicleViewModel();
                 vVM.PersonalNumber = v.PersonalNumber;
@@ -97,7 +98,7 @@ namespace Garage3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,PersonalNumber,TypeName,Color,Make,NumberOfWheels,ArrivalTime")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,PersonalNumber,TypeName,Color,Make,NumberOfWheels,ArrivalTime")] Models.Entities.Vehicle vehicle)
         {
             if (id != vehicle.RegistrationNumber)
             {
@@ -122,7 +123,7 @@ namespace Garage3.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { id = vehicle.PersonalNumber });
             }
             ViewData["PersonalNumber"] = new SelectList(_context.Customers, "PersonalNumber", "PersonalNumber", vehicle.PersonalNumber);
             ViewData["TypeName"] = new SelectList(_context.VTypes, "Name", "Name", vehicle.TypeName);

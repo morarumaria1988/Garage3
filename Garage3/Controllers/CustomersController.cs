@@ -89,11 +89,60 @@ namespace Garage3.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                DateTime birthdate = ExtractBirthdateFromPersonalNumber(customer.PersonalNumber);
+
+                int age = CalculateAge(birthdate);
+
+                // Validate age to restrict registration for individuals under 18
+                if (age < 18)
+                {
+                   
+                    ModelState.AddModelError(string.Empty, "You must be 18 years or older to register.");
+                    return View(customer);
+                }
+
+                // Proceed with registration if age is 18 or older
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(customer);
+        }
+
+        private DateTime ExtractBirthdateFromPersonalNumber(string personalNumber)
+        {
+            if (personalNumber.Length < 10)
+            {
+                throw new ArgumentException("Invalid personal number format.");
+            }
+
+            
+            string dateString = personalNumber.Substring(0, 6);
+
+            if (DateTime.TryParseExact(dateString, "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime birthdate))
+            {
+                return birthdate;
+            }
+            else
+            {
+                throw new ArgumentException("Unable to parse birthdate from personal number.");
+            }
+        }
+
+        private int CalculateAge(DateTime birthdate)
+        {
+            
+            int age = DateTime.Today.Year - birthdate.Year;
+
+            // Adjust age if birthday hasnt occured this year
+            if (birthdate.Date > DateTime.Today.AddYears(-age))
+            {
+                age--;
+            }
+
+            return age;
         }
 
         // GET: Customers/Edit/5

@@ -12,6 +12,8 @@ namespace Garage3.Models.ViewModels
         public string TypeName { get; set; }
         public string Color { get; set; }
         public string Make { get; set; }
+
+        [Display(Name ="Wheels")]
         public int NumberOfWheels { get; set; }
         [Display(Name ="Parking status")]
         public bool IsParked { get; set; }

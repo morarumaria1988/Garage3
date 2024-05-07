@@ -11,9 +11,11 @@ namespace Garage3.Models.Entities
         public VehicleType? VType { get; set; } 
         public string Color { get; set; }
         public string Make {  get; set; }
+        [Display(Name = "Wheels")]
         public int NumberOfWheels { get; set; }
         public Customer? Member { get; set; }
         public ICollection<Receipt> Receipts { get; set; } = new List<Receipt>();
+        [Display(Name ="Arrival time")]
         public DateTime? ArrivalTime { get; set; } 
     }
     public class VehicleType

@@ -1,5 +1,11 @@
+using Garage3.Models.Entities;
 using Garage3.Models.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Text;
+using Garage3.Models.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +22,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+_ = new Config();
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

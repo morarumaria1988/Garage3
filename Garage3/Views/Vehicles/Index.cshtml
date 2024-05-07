@@ -3,13 +3,16 @@
 @{
     ViewData["Title"] = "Index";
     var parkedCount = ViewData["ParkedCount"];
+    var capacity = ViewData["Capacity"];
 }
 
 <h3>Number of Parked Vehicles: @parkedCount</h3>
+ <h3>Capacity: @capacity</h3> 
 <p>
     <a asp-action="Create">
         <button type="button" class="btn btn-primary">Register New Vehicle</button>
     </a>
+   </h3>
 </p>
 
 <table class="table">

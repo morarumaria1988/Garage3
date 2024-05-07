@@ -58,14 +58,17 @@
                 <td>
                     @if (item.IsParked)
                     {
-                        <p>Parked</p>
+                        <span>Parked</span>
+                    } else
+                    {
+                        <span>Checked out</span>
                     }
 
                 </td>
                 <td>
                     @if (item.IsParked)
                     {
-                        <a asp-action="CheckOut" asp-route-id="@item.RegistrationNumber">CheckOut</a>
+                        <a asp-action="CheckOut" asp-route-id="@item.RegistrationNumber">Check Out</a>
                     }
                     else
                     {

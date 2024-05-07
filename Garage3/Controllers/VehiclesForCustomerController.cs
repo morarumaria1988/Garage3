@@ -162,7 +162,7 @@ namespace Garage3.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = vehicle.PersonalNumber });
         }
 
         private bool VehicleExists(string id)

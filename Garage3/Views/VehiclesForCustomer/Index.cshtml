@@ -4,16 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Vehicles of  @Model.customer.FullName </h1>
 
 <p>
-  @Model.customer.FullName 
+    Personal number: @Model.customer.PersonalNumber
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                VType
+                Reg nr
+            </th>
+            <th>
+                Type
             </th>
             <th>
                 Color
@@ -22,7 +25,7 @@
                 Make
             </th>
             <th>
-                NumberOfWheels
+               Wheels nr
             </th>
             <th></th>
         </tr>
@@ -30,6 +33,9 @@
     <tbody>
 @foreach (var item in Model.vehicleViewModels) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationNumber)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.VType)
             </td>

@@ -20,6 +20,16 @@ namespace Garage3.Controllers
             _context = context;
         }
 
+        //LOGIN STUFF
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+
+
         // GET: Customers
         public async Task<IActionResult> Index()
         {

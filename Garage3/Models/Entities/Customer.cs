@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace Garage3.Models.Entities
 {
-    public class Customer
+    public class Customer : IdentityUser
     {
         [Display(Name = "Personal number")]
         public string PersonalNumber { get; set; }

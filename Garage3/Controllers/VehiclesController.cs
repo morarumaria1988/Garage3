@@ -270,5 +270,29 @@ namespace Garage3.Controllers
         {
             return _context.Vehicles.Any(e => e.RegistrationNumber == id);
         }
+
+        public async Task<IActionResult> Statistics()
+        {
+            //SELECT COUNT(TypeName), TypeName AS Vehicle_TypeNames
+            //FROM Vehicles v
+            //LEFT JOIN VTypes vt ON v.TypeName = vt.Name
+            //GROUP BY TypeName
+
+            var stats = await _context.Vehicles
+                .Include(v => v.VType)
+                .GroupBy(v => v.VType)
+                .ToListAsync();
+
+            var model = new VehicleStatisticsViewModel
+            {
+                VehicleTypes = stats.Select(vg => new VehicleTypeStatisticsViewModel
+                {
+                    VehicleTypeName = vg.Key.Name,
+                    TotalAmount = vg.Key.Vehicles.Count
+                }).ToList(),
+            };
+
+            return View(model);
+        }
     }
 }

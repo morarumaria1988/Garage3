@@ -1,0 +1,53 @@
+﻿@model Garage3.Models.ViewModels.VehicleStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<h1>Statistics</h1>
+
+<div>
+    <h4>VehicleStatisticsViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalAmountOfWheels)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TotalAmountOfWheels)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalGeneratedIncome)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TotalGeneratedIncome)
+        </dd>
+        <table class="table">
+            <thead>
+                <th>
+                    @Html.DisplayNameFor(model => model.VehicleTypes.First().VehicleTypeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.VehicleTypes.First().TotalAmount)
+                </th>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.VehicleTypes)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VehicleTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalAmount)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </dl>
+</div>
+@* <div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div> *@

@@ -11,6 +11,7 @@ using Garage3.Models.ViewModels;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Drawing;
 using Garage3.Models.Config;
+using Bogus;
 
 namespace Garage3.Controllers
 {
@@ -306,9 +307,22 @@ namespace Garage3.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Filter(string? regNr)
+        public async Task<IActionResult> Filter(string? regNr, string? vehicleType)
         {
-          var models = await _context.Vehicles.Where(v => v.RegistrationNumber.StartsWith(regNr)).Select(v => new ShowVehicleViewModel
+            var query = _context.Vehicles.AsQueryable();
+
+            if (!string.IsNullOrEmpty(regNr))
+            {
+                query = query.Where(v => v.RegistrationNumber.StartsWith(regNr));
+            }
+
+            if (!string.IsNullOrEmpty(vehicleType))
+            {
+
+                query = query.Where(v => v.TypeName.Equals(vehicleType));
+            }
+
+            var models = await query.Select(v => new ShowVehicleViewModel
             {
                 RegistrationNumber = v.RegistrationNumber,
                 OwnerFullName = v.Member.FullName,
@@ -317,7 +331,6 @@ namespace Garage3.Controllers
                 TypeName = v.TypeName,
                 NumberOfWheels = v.NumberOfWheels,
                 IsParked = (v.ArrivalTime != null)
-
             }).ToListAsync();
             return View(nameof(Index), models);
         }

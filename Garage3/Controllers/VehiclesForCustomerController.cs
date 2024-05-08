@@ -55,25 +55,7 @@ namespace Garage3.Controllers
             return View(vm);
         }
 
-        // GET: VehiclesForCustomer/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var vehicle = await _context.Vehicles
-                .Include(v => v.Member)
-                .Include(v => v.VType)
-                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
-            return View(vehicle);
-        }
 
         // GET: VehiclesForCustomer/Edit/5
         public async Task<IActionResult> Edit(string id)

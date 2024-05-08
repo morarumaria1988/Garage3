@@ -1,4 +1,4 @@
-﻿@model Garage3.Models.Entities.Vehicle
+﻿@model Garage3.Models.ViewModels.ShowVehicleDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -33,6 +33,21 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ArrivalTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.historicalArrivalDepartureTimes)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var item in Model.historicalArrivalDepartureTimes)
+                {
+                    {
+                        <li>@item.ArrivalTime  -  @item.DepartureTime</li>
+             
+                    }
+
+                }
+            </ul>
         </dd>
     </dl>
 </div>

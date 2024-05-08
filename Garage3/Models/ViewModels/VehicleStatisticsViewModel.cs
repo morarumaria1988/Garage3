@@ -7,12 +7,12 @@ namespace Garage3.Models.ViewModels
 {
     public class VehicleStatisticsViewModel
     {
-        //● Hur många fordon finns av varje typ?
         public List<VehicleTypeStatisticsViewModel> VehicleTypes { get; set; }
-        //● Hur många hjul finns det totalt i garaget just nu?
+        [Display(Name="Total Amount of Wheels")]
         public int TotalAmountOfWheels { get; set; }
-        //● Hur mycket har fordonen som står i garaget just nu genererat i    intäkt
-        public int TotalGeneratedIncome { get; set; }
+        [DisplayFormat(DataFormatString="{0:C}")]
+        [Display(Name="Total Generated Income")]
+        public double TotalGeneratedIncome { get; set; }
         //● Annan intressant statistik ni kan komma på.
     }
 

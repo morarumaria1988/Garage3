@@ -25,11 +25,15 @@ namespace Garage3.Controllers
 
            var id = this.RouteData.Values["id"];
             var receptis = await _context.Receipts.Where( r => r.RegistrationNumber == id).ToListAsync();
-            var customer = await _context.Receipts.Where(r => r.RegistrationNumber == id).Select(r => r.Fordon.Member).FirstAsync();
+            var customer = await _context.Vehicles.Where(v => v.RegistrationNumber == id).Select(r => r.Member).FirstOrDefaultAsync();
 
             ViewData["RegistrationNumber"] = id;
-            ViewData["PersonalNumber"] = customer.PersonalNumber;
-            ViewData["FullName"] = customer.FullName;
+            if(customer != null) 
+            {
+                ViewData["PersonalNumber"] = customer.PersonalNumber;
+                ViewData["FullName"] = customer.FullName;
+
+            }
             return View(receptis);
         }
 

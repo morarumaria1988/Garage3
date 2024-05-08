@@ -1,4 +1,4 @@
-﻿@model Garage3.Models.Entities.Vehicle
+﻿@model Garage3.Models.ViewModels.ShowVehicleDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -29,10 +29,51 @@
             @Html.DisplayFor(model => model.NumberOfWheels)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ArrivalTime)
+            @if (Model.timeSpentParkedInGarage != null)
+            {
+                {
+                   
+                    <p>@Html.DisplayNameFor(model => model.timeSpentParkedInGarage)</p>
+                }
+
+            }
+            else
+            {
+                {
+                    <p> Status</p>
+                }
+            }
+         
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ArrivalTime)
+            @if (Model.timeSpentParkedInGarage != null)
+            {
+                {
+                    <p>@Model.timeSpentParkedInGarage</p>
+                }
+              
+            }
+            else
+            {
+                {
+                    <p> Not Parked</p>
+                }
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.historicalArrivalDepartureTimes)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var item in Model.historicalArrivalDepartureTimes)
+                {
+                    {
+                        <li>@item.ArrivalTime  -  @item.DepartureTime</li>
+             
+                    }
+
+                }
+            </ul>
         </dd>
     </dl>
 </div>

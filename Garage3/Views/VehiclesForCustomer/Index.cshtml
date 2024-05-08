@@ -49,8 +49,8 @@
                 @Html.DisplayFor(modelItem => item.NumberOfWheels)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RegistrationNumber">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RegistrationNumber">Details</a> |
+                <a asp-controller= "Vehicles" asp-action="Edit" asp-route-id="@item.RegistrationNumber">Edit</a> |
+                <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@item.RegistrationNumber">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.RegistrationNumber">Delete</a>
             </td>
         </tr>

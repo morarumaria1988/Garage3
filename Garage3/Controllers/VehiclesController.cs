@@ -10,6 +10,7 @@ using Garage3.Models.Persistence;
 using Garage3.Models.ViewModels;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Drawing;
+using Garage3.Models.Config;
 
 namespace Garage3.Controllers
 {
@@ -48,6 +49,7 @@ namespace Garage3.Controllers
            var parkedCount = await _context.Vehicles.Where(v => v.ArrivalTime != null).CountAsync();
             ViewData["ParkedCount"] = parkedCount;
 
+            ViewData["Capacity"] = Config.GarageInfo.Capacity;
             return View(list);
         }
 
@@ -61,12 +63,31 @@ namespace Garage3.Controllers
 
             var vehicle = await _context.Vehicles
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+
+         
+            var vVM = new ShowVehicleDetailsViewModel {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                NumberOfWheels = vehicle.NumberOfWheels,
+                timeSpentParkedInGarage = vehicle.TimeSpentSinceArrivalTime,
+                Color = vehicle.Color,
+              
+            };
+
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            vVM.historicalArrivalDepartureTimes = _context.Receipts
+                .Where(r => r.RegistrationNumber == id)
+                .Select(r => new ArrivalDepartureTime
+            {
+                ArrivalTime = r.ArrivalTime,
+                DepartureTime = r.DepartureTime
+            });
+
+            return View(vVM);
         }
 
         // GET: Vehicles/Create
@@ -100,7 +121,13 @@ namespace Garage3.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_context.Customers.FirstOrDefault(c => c.PersonalNumber == vehicleViewModel.PersonalNumber) == null)
+                var capacity = Config.GarageInfo.Capacity;
+                if (v.ArrivalTime != null && await _context.Vehicles.Where(v => v.ArrivalTime != null).CountAsync() >= capacity) {
+
+                    ModelState.AddModelError(string.Empty, "Garage is full");
+                }
+
+                else  if (_context.Customers.FirstOrDefault(c => c.PersonalNumber == vehicleViewModel.PersonalNumber) == null)
                 {
 
                     ModelState.AddModelError(string.Empty, "This user personal number dont exist in our database");
@@ -224,16 +251,27 @@ namespace Garage3.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicles
-                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
-            if (vehicle == null)
+            var capacity = Config.GarageInfo.Capacity;
+            if (await _context.Vehicles.Where(v => v.ArrivalTime != null).CountAsync() >= capacity)
             {
-                return NotFound();
+
+                ModelState.AddModelError(string.Empty, "Garage is full");
+              
             }
 
-            vehicle.ArrivalTime = DateTime.Now;
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                var vehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+                if (vehicle == null)
+                {
+                    return NotFound();
+                }
+
+                vehicle.ArrivalTime = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+                return RedirectToAction(nameof(Index));
         }
 
         // GET: Vehicles/CheckOut/5

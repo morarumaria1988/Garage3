@@ -10,7 +10,8 @@ namespace Garage3.Models.ViewModels
         [Display(Name = "Wheels")]
         public int NumberOfWheels { get; set; }
 
-        public DateTime? ArrivalTime { get; set; }
+        [Display(Name = "time spent parked in Garage")]
+        public string? timeSpentParkedInGarage { get; set; }
 
         [Display(Name = "Historical Arrival - Departure Times")]
         public IEnumerable<ArrivalDepartureTime> historicalArrivalDepartureTimes { get; set; }

@@ -63,11 +63,13 @@ namespace Garage3.Controllers
 
             var vehicle = await _context.Vehicles
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+
+         
             var vVM = new ShowVehicleDetailsViewModel {
                 RegistrationNumber = vehicle.RegistrationNumber,
                 Make = vehicle.Make,
                 NumberOfWheels = vehicle.NumberOfWheels,
-                ArrivalTime = vehicle.ArrivalTime,
+                timeSpentParkedInGarage = vehicle.TimeSpentSinceArrivalTime,
                 Color = vehicle.Color,
               
             };

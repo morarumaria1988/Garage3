@@ -304,6 +304,24 @@ namespace Garage3.Controllers
         {
             return RedirectToAction("Index", "Receipts", new {id = id});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(string? regNr)
+        {
+          var models = await _context.Vehicles.Where(v => v.RegistrationNumber.StartsWith(regNr)).Select(v => new ShowVehicleViewModel
+            {
+                RegistrationNumber = v.RegistrationNumber,
+                OwnerFullName = v.Member.FullName,
+                Color = v.Color,
+                Make = v.Make,
+                TypeName = v.TypeName,
+                NumberOfWheels = v.NumberOfWheels,
+                IsParked = (v.ArrivalTime != null)
+
+            }).ToListAsync();
+            return View(nameof(Index), models);
+        }
+     
         private bool VehicleExists(string id)
         {
             return _context.Vehicles.Any(e => e.RegistrationNumber == id);

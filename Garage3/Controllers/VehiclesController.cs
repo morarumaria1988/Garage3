@@ -63,12 +63,29 @@ namespace Garage3.Controllers
 
             var vehicle = await _context.Vehicles
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+            var vVM = new ShowVehicleDetailsViewModel {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                NumberOfWheels = vehicle.NumberOfWheels,
+                ArrivalTime = vehicle.ArrivalTime,
+                Color = vehicle.Color,
+              
+            };
+
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            vVM.historicalArrivalDepartureTimes = _context.Receipts
+                .Where(r => r.RegistrationNumber == id)
+                .Select(r => new ArrivalDepartureTime
+            {
+                ArrivalTime = r.ArrivalTime,
+                DepartureTime = r.DepartureTime
+            });
+
+            return View(vVM);
         }
 
         // GET: Vehicles/Create

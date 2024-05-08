@@ -55,63 +55,6 @@ namespace Garage3.Controllers
             return View(vm);
         }
 
-
-
-        // GET: VehiclesForCustomer/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicle = await _context.Vehicles.FindAsync(id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-            ViewData["PersonalNumber"] = new SelectList(_context.Customers, "PersonalNumber", "PersonalNumber", vehicle.PersonalNumber);
-            ViewData["TypeName"] = new SelectList(_context.VTypes, "Name", "Name", vehicle.TypeName);
-            return View(vehicle);
-        }
-
-        // POST: VehiclesForCustomer/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,PersonalNumber,TypeName,Color,Make,NumberOfWheels,ArrivalTime")] Models.Entities.Vehicle vehicle)
-        {
-            if (id != vehicle.RegistrationNumber)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(vehicle);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VehicleExists(vehicle.RegistrationNumber))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index), new { id = vehicle.PersonalNumber });
-            }
-            ViewData["PersonalNumber"] = new SelectList(_context.Customers, "PersonalNumber", "PersonalNumber", vehicle.PersonalNumber);
-            ViewData["TypeName"] = new SelectList(_context.VTypes, "Name", "Name", vehicle.TypeName);
-            return View(vehicle);
-        }
-
         // GET: VehiclesForCustomer/Delete/5
         public async Task<IActionResult> Delete(string id)
         {

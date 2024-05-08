@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Text;
 using Garage3.Models.Config;
+using Garage3.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<GarageMVCContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("GarageMVCContext") ?? throw new InvalidOperationException("Connection string 'GarageMVCContext' not found.")));
+builder.Services.AddScoped<IGetVehicleTypeService, GetVehicleTypeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

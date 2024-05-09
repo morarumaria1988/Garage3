@@ -347,34 +347,24 @@ namespace Garage3.Controllers
                 .GroupBy(v => v.VType)
                 .ToListAsync();
 
+            var receipts = await _context.Receipts.ToListAsync();
+
             var model = new VehicleStatisticsViewModel
             {
                 VehicleTypes = stats.Select(vg => new VehicleTypeStatisticsViewModel
                 {
                     VehicleTypeName = vg.Key.Name,
-                    TotalAmount = vg.Key.Vehicles.Count
+                    TotalAmount = vg.Key.Vehicles
+                        .Where(v => v.ArrivalTime is not null)
+                        .Count()
                 }).ToList(),
                 TotalAmountOfWheels = stats
                     .Select(vg => vg.Key.Vehicles.Sum(v => v.NumberOfWheels))
                     .Sum(),
-                TotalGeneratedIncome = stats
-                    .Select(vg => vg.Key.Vehicles.Select(v => CalculateParkingPrice(v.ArrivalTime)).Sum()).Sum()
-                //TODO: 
+                TotalGeneratedIncome = receipts.Select(r => r.Price).Sum()
             };
 
             return View(model);
-        }
-
-        //NOTE: This function is just a placeholder so we can simulate
-        //price calculation for the total amount of generated income in
-        // the Statistics overview page
-        private double CalculateParkingPrice(DateTime? timeOfArrival)
-        {
-            double hourlyRate = 7.5;
-
-            var timeDifference = DateTime.Now - (DateTime)timeOfArrival;
-
-            return hourlyRate * Math.Round((double)timeDifference.TotalSeconds / 3600, 0);
         }
     }
 }

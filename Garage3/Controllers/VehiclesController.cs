@@ -359,7 +359,9 @@ namespace Garage3.Controllers
                         .Count()
                 }).ToList(),
                 TotalAmountOfWheels = stats
-                    .Select(vg => vg.Key.Vehicles.Sum(v => v.NumberOfWheels))
+                    .Select(vg => vg.Key.Vehicles
+                        .Where(v => v.ArrivalTime is not null)
+                        .Sum(v => v.NumberOfWheels))
                     .Sum(),
                 TotalGeneratedIncome = receipts.Select(r => r.Price).Sum()
             };

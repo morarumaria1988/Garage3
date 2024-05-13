@@ -12,6 +12,7 @@ namespace Garage3.Models.Persistence
         public GarageMVCContext(DbContextOptions<GarageMVCContext> options)
             : base(options)
         {
+     
         }
 
         public DbSet<Customer> Customers { get; set; } = default!;
@@ -28,11 +29,7 @@ namespace Garage3.Models.Persistence
             modelBuilder.ApplyConfiguration(new CustomerConfigurations());
             modelBuilder.ApplyConfiguration(new VehicleConfigurations());
 
-            /*
-            modelBuilder.Entity<VehicleType>()
-                     .Property(p => p.Id)
-                     .ValueGeneratedOnAdd();
-            */
-        }
+         }
+
     }
 }

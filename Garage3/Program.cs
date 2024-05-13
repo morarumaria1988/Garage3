@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using Garage3.Models.Config;
 using Garage3.Services;
+using Garage3.NewFolder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    await app.SeedDataAsync();
+}
+
 
 _ = new Config();
+
 
 
 app.UseHttpsRedirection();
